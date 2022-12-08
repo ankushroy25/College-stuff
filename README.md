@@ -1,5 +1,3 @@
 # myDSA
-<li>
-<ul>DSA practise journey </ul>
-<ul>You can contribute as well </ul>
-</li>
+<li> DSA practise journey </li>
+<li> You can contribute as well in your choice of language </li>
