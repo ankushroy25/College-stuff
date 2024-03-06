@@ -27,17 +27,37 @@ public class Client {
 
         System.out.print("Enter binary input: ");
         String inputData = inFromUser.readLine();
-        inputData += calculateParityBit(inputData);
-        outToServer.writeBytes(inputData + '\n');
+        System.out.print("Original input: " + inputData);
 
-        String modifiedData = inFromServer.readLine();
-        if (!modifiedData.equals("ERROR")) {
-            System.out.println("Data received from server after parity check: " + modifiedData);
+        inputData += calculateParityBit(inputData);
+        System.out.println("Modified input: " + inputData);
+
+        System.out.println("Test for error injection (y or n) :");
+        char ch = inFromUser.readLine().charAt(0);
+
+        if (ch == 'y' || ch == 'Y') {
+            String errorInput = inputData.substring(0, inputData.length() - 1)
+                    + ((inputData.charAt(inputData.length() - 1) == '0') ? '1' : '0');
+            System.out.println("Sending to server [Wrong input] : " + errorInput);
+            outToServer.writeBytes(errorInput + '\n');
         } else {
-            System.out.println("Parity check failed. Resending data...");
+            System.out.println("Sending to server [original input]: " + inputData);
             outToServer.writeBytes(inputData + '\n');
         }
 
+        while (true) {
+
+            String response = inFromServer.readLine();
+
+            if (response.equals("500")) {
+                System.out.println("Server requesting for retransmission...");
+                System.out.println("Sending to server [original input]: " + inputData);
+                outToServer.writeBytes(inputData + '\n');
+            } else {
+                System.out.println("Server response : " + response);
+                break;
+            }
+        }
         clientSocket.close();
     }
 
