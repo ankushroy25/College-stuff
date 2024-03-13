@@ -11,6 +11,11 @@ public class Client {
             byte msg[] = s1.getBytes();
 
             InetAddress address = InetAddress.getByName("localhost");
+
+            // Object obj = address;
+            // Class<?> objClass = obj.getClass();
+            // System.out.println(objClass.getName());
+
             DatagramPacket packet = new DatagramPacket(msg, msg.length, address, 50000);
             DatagramSocket dsocket = new DatagramSocket();
 
